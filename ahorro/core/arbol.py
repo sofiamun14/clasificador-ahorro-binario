@@ -74,3 +74,59 @@ class ArbolDecision:
         nodo_actual.derecho = Nodo(texto=texto_original, perfil=perfil_original)
 
         return True
+
+    def listar_inorden(self) -> list[str]:
+        """
+        Recorrido Inorden: Izquierda, Raíz, Derecha.
+        Devuelve el catálogo de preguntas y perfiles en orden estructural.
+        """
+        resultado = []
+        def _recorrer(nodo: Nodo):
+            if nodo is not None:
+                _recorrer(nodo.izquierdo)
+                resultado.append(nodo.texto)
+                _recorrer(nodo.derecho)
+        
+        _recorrer(self.raiz)
+        return resultado
+
+    def obtener_preorden(self) -> list:
+        """
+        Recorrido Preorden: Raíz, Izquierda, Derecha.
+        Incluye valores None para los hijos vacíos, necesario para la serialización.
+        """
+        resultado = []
+        def _recorrer(nodo):
+            if nodo is None:
+                resultado.append(None)
+                return
+            
+            resultado.append(nodo)
+            _recorrer(nodo.izquierdo)
+            _recorrer(nodo.derecho)
+                
+        _recorrer(self.raiz)
+        return resultado
+
+    def desmontar_postorden(self) -> list[str]:
+        """
+        Recorrido Postorden: Izquierda, Derecha, Raíz.
+        Registra la visita de hijos antes que el padre, elimina vínculos y deja la raíz en None.
+        """
+        traza = []
+        def _recorrer(nodo: Nodo):
+            if nodo is None:
+                return
+            
+            _recorrer(nodo.izquierdo)
+            _recorrer(nodo.derecho)
+            
+            traza.append(f"Visitado para desmontaje: {nodo.texto}")
+            nodo.izquierdo = None
+            nodo.derecho = None
+            
+        _recorrer(self.raiz)
+        self.raiz = None  # Se retira la referencia principal para que Python limpie la memoria
+        return traza
+
+
