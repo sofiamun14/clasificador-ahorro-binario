@@ -1,0 +1,15 @@
+Q|¿Te sobra dinero al final de mes?
+Q|¿Apartas el ahorro cuando cobras?
+P|consolidado|Ahorrador Consolidado
+#
+#
+P|esporadico|Ahorrador Esporádico
+#
+#
+Q|¿Tus deudas superan el 30 % de tus ingresos?
+P|apagafuegos|Perfil Apagafuegos
+#
+#
+P|fuga_capital|Fuga de Capital
+#
+#
