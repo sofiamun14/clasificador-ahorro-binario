@@ -37,3 +37,40 @@ class ArbolDecision:
             if nodo.derecho is None:
                 raise ValueError("Ruta inválida: no hay hijo derecho.")
             return nodo.derecho
+    
+    def aprender(self, ruta: list[bool], pregunta: str, nuevo_perfil: Perfil) -> bool:
+        """
+        Convierte una hoja existente en una nueva pregunta.
+        Izquierdo (SÍ) = nuevo perfil, Derecho (NO) = perfil original.
+        """
+        if self.raiz is None:
+            return False
+
+        # 1. Navegar hasta la hoja correspondiente usando la ruta
+        nodo_actual = self.raiz
+        try:
+            for respuesta in ruta:
+                nodo_actual = self.avanzar(nodo_actual, respuesta)
+        except ValueError:
+            return False  # La ruta entregada fue inválida
+
+        # 2. Validar que realmente llegamos a una hoja
+        if not nodo_actual.es_hoja():
+            return False
+
+        # 3. Guardar los datos de la hoja original (que ahora será la respuesta NO)
+        perfil_original = nodo_actual.perfil
+        texto_original = nodo_actual.texto
+
+        # 4. Transformar el nodo actual en un nodo de pregunta
+        nodo_actual.texto = pregunta
+        nodo_actual.perfil = None
+
+        # 5. Crear los dos nuevos hijos
+        # Izquierdo = SÍ = Nuevo perfil
+        nodo_actual.izquierdo = Nodo(texto=nuevo_perfil.nombre, perfil=nuevo_perfil)
+        
+        # Derecho = NO = Perfil original
+        nodo_actual.derecho = Nodo(texto=texto_original, perfil=perfil_original)
+
+        return True
