@@ -20,7 +20,7 @@ class MenuConsola:
             print(" SISTEMA CLASIFICADOR DE HÁBITOS DE AHORRO ")
             print("="*45)
             print("1. Iniciar diagnóstico")
-            print("2. Ver catálogo de perfiles (Inorden)")
+            print("2. Ver catálogo de perfiles")
             print("3. Ayuda")
             print("4. Salir")
             
