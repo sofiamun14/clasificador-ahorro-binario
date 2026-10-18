@@ -1,3 +1,5 @@
+"""Pruebas unitarias para la persistencia del árbol de 63 nodos en formato TXT preorden."""
+
 from ahorro.core.arbol import ArbolDecision
 from ahorro.core.perfil import Perfil
 from ahorro.data_access.txt import RepositorioArbolTxt
@@ -26,22 +28,21 @@ def test_formato_preorden_con_marcadores(tmp_path):
     RepositorioArbolTxt.guardar(ArbolDecision(), ruta)
 
     lineas = ruta.read_text(encoding="utf-8").splitlines()
-    assert lineas[0] == "Q|¿Te sobra dinero al final de mes?"
-    assert lineas[2] == "P|consolidado|Ahorrador Consolidado"
-    assert lineas[3:5] == ["#", "#"]
-    assert len(lineas) == 7 + 8  # 7 nodos + 8 marcadores nulos
+    assert lineas[0].startswith("Q|¿Tus ingresos mensuales")
+    assert "P|ahorrador_visionario_avanzado|Ahorrador Visionario de Alto Rendimiento" in lineas
+    assert len(lineas) == 63 + 64
 
 
 def test_caracteres_especiales_se_escapan_y_restauran(tmp_path):
     ruta = tmp_path / "arbol.txt"
     arbol = ArbolDecision()
     pregunta = "¿A|B\\C\nlinea?"
-    assert arbol.aprender([True, True], pregunta, Perfil("a|b", "Nom|bre\\x\ny"))
+    assert arbol.aprender([True, True, True, True, True], pregunta, Perfil("a|b", "Nom|bre\\x\ny"))
 
     RepositorioArbolTxt.guardar(arbol, ruta)
     cargado = RepositorioArbolTxt.cargar(ruta)
 
-    nodo = cargado.avanzar(cargado.avanzar(cargado.raiz, True), True)
+    nodo = cargado.avanzar(cargado.avanzar(cargado.avanzar(cargado.avanzar(cargado.avanzar(cargado.raiz, True), True), True), True), True)
     assert nodo.texto == pregunta
     assert nodo.izquierdo.perfil == Perfil("a|b", "Nom|bre\\x\ny")
     assert _estructura(cargado) == _estructura(arbol)
